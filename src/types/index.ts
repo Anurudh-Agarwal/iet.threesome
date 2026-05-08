@@ -15,6 +15,10 @@ export interface RamanujanStudent {
   branch: Branch;
 }
 
+export interface Error { 
+  message: string;
+}
+
 export interface VotedStudent {
   priority: number;
   roll_no: string;
