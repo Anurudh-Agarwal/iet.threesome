@@ -3,15 +3,20 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import tseslint from "typescript-eslint";
 import prettierConfig from "eslint-config-prettier";
+import prettierPlugin from "eslint-plugin-prettier"; // ✅ add this
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   ...tseslint.configs.recommendedTypeChecked,
 
-  prettierConfig,                      // must be last — disables conflicting rules
+  prettierConfig,
 
   {
+    plugins: {
+      prettier: prettierPlugin, // ✅ add this
+    },
+
     languageOptions: {
       parserOptions: {
         project: true,
@@ -20,33 +25,29 @@ const eslintConfig = defineConfig([
     },
 
     rules: {
-      // ── Semicolons ──────────────────────────────
-      "semi":                              "off",      // off — TS version handles it
-      "@typescript-eslint/semi":           ["error", "always"],
-      "semi-style":                        ["error", "last"],
-      "semi-spacing":                      ["error", { before: false, after: true }],
+      "prettier/prettier": "warn", // ✅ shows warning if not formatted
 
       // ── TypeScript ───────────────────────────────
-      "no-unused-vars":                    "off",      // off — TS version handles it
+      "no-unused-vars":                    "off",
       "@typescript-eslint/no-unused-vars": ["error", {
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_",
       }],
-      "@typescript-eslint/no-explicit-any":            "error",
-      "@typescript-eslint/no-floating-promises":       "error",
-      "@typescript-eslint/await-thenable":             "error",
-      "@typescript-eslint/consistent-type-imports":   ["error", {
+      "@typescript-eslint/no-explicit-any":          "error",
+      "@typescript-eslint/no-floating-promises":     "error",
+      "@typescript-eslint/await-thenable":           "error",
+      "@typescript-eslint/consistent-type-imports":  ["error", {
         prefer: "type-imports",
         fixStyle: "inline-type-imports",
       }],
 
       // ── Best practices ───────────────────────────
-      "eqeqeq":           ["error", "always"],
-      "no-var":            "error",
-      "prefer-const":      "error",
-      "prefer-template":   "error",
-      "object-shorthand":  "error",
-      "no-console":       ["warn", { allow: ["warn", "error"] }],
+      "eqeqeq":          ["error", "always"],
+      "no-var":           "error",
+      "prefer-const":     "error",
+      "prefer-template":  "error",
+      "object-shorthand": "error",
+      "no-console":      ["warn", { allow: ["warn", "error"] }],
     },
   },
 
@@ -60,7 +61,6 @@ const eslintConfig = defineConfig([
     },
   },
 
-  // Override default ignores of eslint-config-next.
   globalIgnores([
     ".next/**",
     "out/**",
