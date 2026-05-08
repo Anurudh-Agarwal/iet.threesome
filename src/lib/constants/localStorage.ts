@@ -1,0 +1,1 @@
+export const HAS_SEEN_INTRO = 'has_seen_intro';
