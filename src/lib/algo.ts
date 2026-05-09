@@ -3,6 +3,8 @@ interface StudentPriority {
   priorities: string[];
 }
 
+const SCORES = [6, 4, 2, 1];
+
 const getCompatibilityScore = (
   a: string,
   b: string,
@@ -10,8 +12,10 @@ const getCompatibilityScore = (
 ): number => {
   const aPrefs = preferences.get(a) ?? [];
   const bPrefs = preferences.get(b) ?? [];
-  const aScore = aPrefs.indexOf(b) !== -1 ? 4 - aPrefs.indexOf(b) : 0;
-  const bScore = bPrefs.indexOf(a) !== -1 ? 4 - bPrefs.indexOf(a) : 0;
+  const aIdx = aPrefs.indexOf(b);
+  const bIdx = bPrefs.indexOf(a);
+  const aScore = aIdx !== -1 ? SCORES[aIdx] : 0;
+  const bScore = bIdx !== -1 ? SCORES[bIdx] : 0;
   return aScore + bScore;
 };
 
@@ -37,8 +41,8 @@ const prefersOver = (
   const prefs = preferences.get(student) ?? [];
   const newIdx = prefs.indexOf(newPartner);
   const curIdx = prefs.indexOf(currentPartner);
-  const newScore = newIdx === -1 ? -1 : 4 - newIdx;
-  const curScore = curIdx === -1 ? -1 : 4 - curIdx;
+  const newScore = newIdx === -1 ? 0 : SCORES[newIdx];
+  const curScore = curIdx === -1 ? 0 : SCORES[curIdx];
   return newScore > curScore;
 };
 
