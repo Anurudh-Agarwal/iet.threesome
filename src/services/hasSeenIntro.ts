@@ -1,3 +1,4 @@
+'use client'
 import { HAS_SEEN_INTRO } from "@/lib/constants/localStorage";
 
 export const hasSeenIntro = (): boolean => {
