@@ -1,19 +1,19 @@
 import { createClient } from "@/lib/supabase/client";
-import { getCurrentRollNo } from "@/utils/getCurrentRollNo";
 import { Triplet, RamanujanStudent } from "@/types";
 
-export const fetchUserTriplet = async (): Promise<Triplet> => {
+export const fetchUserTriplet = async (roll_no: string): Promise<Triplet> => {
   const supabase = createClient();
-  const rollNo = getCurrentRollNo();
 
   const { data, error } = await supabase
     .from("triplets")
-    .select(`
+    .select(
+      `
       student_1:ramanujan_students!student_1 (roll_no, name, branch),
       student_2:ramanujan_students!student_2 (roll_no, name, branch),
       student_3:ramanujan_students!student_3 (roll_no, name, branch)
-    `)
-    .or(`student_1.eq.${rollNo},student_2.eq.${rollNo},student_3.eq.${rollNo}`)
+    `,
+    )
+    .or(`student_1.eq.${roll_no},student_2.eq.${roll_no},student_3.eq.${roll_no}`)
     .single();
 
   if (error) throw new Error(`Failed to fetch triplet: ${error.message}`);

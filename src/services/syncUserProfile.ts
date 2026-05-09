@@ -1,9 +1,7 @@
-import { getCurrentRollNo } from "@/utils/getCurrentRollNo";
 import { createClient } from "@/lib/supabase/client";
 
-export const syncUserProfile = async (clerkId: string): Promise<void> => {
+export const syncUserProfile = async (roll_no:string, clerkId: string): Promise<void> => {
   const supabase = createClient();
-  const roll_no = getCurrentRollNo();
 
   const { error } = await supabase
     .from("profiles")

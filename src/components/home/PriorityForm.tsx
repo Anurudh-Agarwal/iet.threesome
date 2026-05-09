@@ -52,8 +52,9 @@ const PRIORITIES = [
 ] as const;
 
 export const PriorityForm = ({ students }: PriorityFormProps) => {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const { openSignIn } = useClerk();
+  const roll_no = user?.publicMetadata?.roll_no as string;
 
   const form = useForm<PriorityFormValues>({
     resolver: zodResolver(priorityFormSchema),
@@ -61,26 +62,46 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
   });
 
   useEffect(() => {
-    const savedData = getFormDataFromLocalStorage();
+    if (!roll_no) return;
+    const savedData = getFormDataFromLocalStorage(roll_no);
     if (!savedData) return;
-    form.reset(savedData);
-  }, []);
+    form.reset({
+      p1: savedData.p1.roll_no,
+      p2: savedData.p2.roll_no,
+      p3: savedData.p3.roll_no,
+      p4: savedData.p4.roll_no,
+    });
+  }, [roll_no]);
 
   useEffect(() => {
-    if (!isSignedIn) return;
-    const savedData = getFormDataFromLocalStorage();
+    if (!isSignedIn || !roll_no) return;
+    const savedData = getFormDataFromLocalStorage(roll_no);
     if (!savedData) return;
-    saveFormDataToSupabase(savedData);
+    saveFormDataToSupabase(roll_no, savedData);
   }, [isSignedIn]);
 
   const onSubmit = async (values: PriorityFormValues) => {
-    const formData: FormData = values;
-    saveFormDataToLocalStorage(formData);
+    const formData: FormData = {
+      p1: students.find((s) => s.roll_no === values.p1)!,
+      p2: students.find((s) => s.roll_no === values.p2)!,
+      p3: students.find((s) => s.roll_no === values.p3)!,
+      p4: students.find((s) => s.roll_no === values.p4)!,
+    };
+
+    if (!roll_no) {
+      saveFormDataToLocalStorage("guest", formData);
+      openSignIn();
+      return;
+    }
+
+    saveFormDataToLocalStorage(roll_no, formData);
+
     if (!isSignedIn) {
       openSignIn();
       return;
     }
-    await saveFormDataToSupabase(formData);
+
+    await saveFormDataToSupabase(roll_no, formData);
   };
 
   return (
@@ -98,7 +119,7 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder={`Select ${label}`} />
-                    </SelectTrigger>
+                    </SelectTrigger>  
                   </FormControl>
                   <SelectContent>
                     {students.map((student) => (

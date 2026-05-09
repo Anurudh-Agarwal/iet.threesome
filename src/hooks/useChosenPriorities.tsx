@@ -3,18 +3,20 @@
 import { useState, useEffect } from "react";
 import getFormDataFromLocalStorage from "@/services/getFormDataFromLocalStorage";
 import { FormData, Error } from "@/types";
-import { getCurrentRollNo } from "@/utils/getCurrentRollNo";
+import { useClerk } from "@clerk/nextjs";
 
 export const useChosenPrioritites = () => {
   const [error, setError] = useState<Error | null>(null);
   const [chosenPrior, setChosenPrior] = useState<FormData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const roll_no = getCurrentRollNo();
+  const {user}= useClerk();
+  const roll_no = user?.publicMetadata?.roll_no as string;
 
   const chosenPriorities = () => {
+    if(!roll_no) return;
     try {
       setIsLoading(true);
-      const data = getFormDataFromLocalStorage();
+      const data = getFormDataFromLocalStorage(roll_no);
       setChosenPrior(data);
       setError(null);
     } catch (err) {

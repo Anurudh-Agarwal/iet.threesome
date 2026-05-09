@@ -1,10 +1,8 @@
 import { FormData } from "@/types";
 import { createClient } from "@/lib/supabase/client";
-import { getCurrentRollNo } from "@/utils/getCurrentRollNo";
 
-export const saveFormDataToSupabase = async (formData: FormData) : Promise<void>=> {
+export const saveFormDataToSupabase = async (voter_roll_no:string , formData: FormData) : Promise<void>=> {
   const supabase = createClient();
-  const voter_roll_no = getCurrentRollNo();
 
   const { error } = await supabase.from("priorities").upsert({
     voter_roll_no,
