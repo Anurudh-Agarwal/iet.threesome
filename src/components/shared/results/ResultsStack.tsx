@@ -8,7 +8,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Triplet } from "@/types";
 
-export default function ResultsTable(triplets:Triplet[]) {
+export default function ResultsStack({triplets}: {triplets:Triplet[]}) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">

@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Triplet } from "@/types";
 
-export default function ResultsTable(triplets: Triplet[]) {
+export default function ResultsTable({triplets}: {triplets: Triplet[]}) {
 
   return (
     <Card className="w-full rounded-2xl shadow-sm">
@@ -26,7 +26,7 @@ export default function ResultsTable(triplets: Triplet[]) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">#</TableHead>
+                <TableHead className="w-20">#</TableHead>
                 <TableHead>Student 1</TableHead>
                 <TableHead>Student 2</TableHead>
                 <TableHead>Student 3</TableHead>
