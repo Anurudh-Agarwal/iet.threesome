@@ -3,32 +3,40 @@
 import { fetchUserTriplet } from "@/services/fetchUserTriplet";
 import { useState, useEffect } from "react";
 import { Triplet, Error } from "@/types";
-import { useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 const useUserTriplet = () => {
-
-  const {user}=useClerk();
+  const { user, isLoaded } = useUser();
   const [triplet, setTriplet] = useState<Triplet | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const roll_no = user?.publicMetadata?.roll_no as string;
 
-  const userTriplet = async () => {
-    if(!roll_no) return ;
-    try {
-      setIsLoading(true);
-      const data = await fetchUserTriplet (roll_no);
-      setTriplet(data);
-      setError(null);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Extract roll_no from email instead of publicMetadata
+  const roll_no = user?.primaryEmailAddress?.emailAddress?.split("@")[0];
+
   useEffect(() => {
+    if (!isLoaded) return; // wait for Clerk to load
+
+    if (!roll_no) {
+      setIsLoading(false); // not logged in, stop loading
+      return;
+    }
+
+    const userTriplet = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchUserTriplet(roll_no);
+        setTriplet(data);
+        setError(null);
+      } catch (err) {
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     userTriplet();
-  }, [roll_no]);
+  }, [roll_no, isLoaded]);
 
   return { error, triplet, isLoading };
 };

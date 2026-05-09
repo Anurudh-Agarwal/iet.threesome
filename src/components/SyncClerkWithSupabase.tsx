@@ -16,12 +16,12 @@ const SyncClerkWithSupabase = () => {
 
     const sync = async () => {
       const email = user?.primaryEmailAddress?.emailAddress;
-      const roll_no= user?.publicMetadata?.roll_no as string;
+      const roll_no = email?.split("@")[0];
 
-      if (!email) return;
+      if (!email || !roll_no) return;
 
       if (isUserAllowed(email)) {
-        await syncUserProfile(user.id,roll_no);
+        await syncUserProfile(user.id, roll_no);
       } else {
         setShowPopup(true);
 

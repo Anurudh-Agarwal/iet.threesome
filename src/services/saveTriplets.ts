@@ -11,7 +11,7 @@ const saveTriplets = async (triplets: TripletInput[]): Promise<void> => {
 
   const { error } = await supabase
     .from("triplets")
-    .insert(triplets);
+    .upsert(triplets);
 
   if (error) throw new Error(error.message);
 };

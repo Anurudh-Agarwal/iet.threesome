@@ -6,25 +6,33 @@ import ErrorDialog from "../errors/ErrorDialogBox";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 
-export const ResultCard=()=>{
-    const {error , triplet , isLoading}= useUserTriplet();
-    const isMobile= useIsMobile();
-    const [open , setOpen]= useState(true);
+export const ResultCard = () => {
+  const { error, triplet, isLoading } = useUserTriplet();
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(true);
 
-    if(error){
-      return  <ErrorDialog open={open} onOpenChange={setOpen}  description={error.message}/>;
-    }
-    if(isLoading){
-       return <Spinner/>;
-    }
-    if(!triplet){
-        return null;
-    }
+  if (isLoading) return <Spinner />;
 
-    return(<>
-        {isMobile
-                    ? <ResultsStack triplets={[triplet]}/>
-                    : <ResultsTable triplets={[triplet]}/>
-        }
-    </>)
-}
+  // No triplets assigned yet — show a friendly message
+  if (!triplet && !error) {
+    return (
+      <div className="border rounded-2xl p-6 shadow-sm bg-card w-full max-w-xl mx-auto text-center text-muted-foreground">
+        <p className="text-sm">Triplet results haven't been announced yet.</p>
+        <p className="text-xs mt-1">Check back later!</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <ErrorDialog open={open} onOpenChange={setOpen} description={error.message} />;
+  }
+
+  return (
+    <>
+      {isMobile
+        ? <ResultsStack triplets={[triplet!]} />
+        : <ResultsTable triplets={[triplet!]} />
+      }
+    </>
+  );
+};
