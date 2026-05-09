@@ -24,7 +24,7 @@ export default function ErrorDialog({
 }: ErrorDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[420px] rounded-2xl">
+      <DialogContent className="sm:max-w-105 rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-destructive text-xl">
             ERROR

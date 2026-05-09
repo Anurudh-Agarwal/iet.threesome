@@ -15,7 +15,7 @@ export default function IntroDialog() {
   }
   return (
     <Dialog defaultOpen>
-      <DialogContent className="max-w-[480px]">
+      <DialogContent className="max-w-120">
         <DialogHeader>
           <DialogTitle>Welcome to Threesome</DialogTitle>
           <DialogDescription>
