@@ -13,7 +13,7 @@ import { type Triplet } from "@/types";
 export default function ResultsPage() {
   const { triplets, isLoading, error } = useTriplets();
   const isMobile = useIsMobile();
-  const [filtered, setFiltered] = useState<Triplet[]>([]);
+  const [filtered, setFiltered] = useState<Triplet[] | null>(null);
   const [errorOpen, setErrorOpen] = useState(true);
 
   if (isLoading) {
@@ -44,7 +44,8 @@ export default function ResultsPage() {
     );
   }
 
-  const displayTriplets = filtered.length > 0 ? filtered : triplets;
+  const hasSearched = filtered !== null;
+  const displayTriplets = hasSearched && filtered!.length > 0 ? filtered! : triplets;
 
   return (
     <main className="flex flex-col gap-6 px-4 py-12 max-w-5xl mx-auto">
@@ -54,10 +55,10 @@ export default function ResultsPage() {
 
       <SearchBar
         triplets={triplets}
-        onSearch={setFiltered}
+        onSearch={(result) => setFiltered(result)}
       />
 
-      {filtered.length === 0 && triplets.length > 0 ? (
+      {hasSearched && filtered!.length === 0 ? (
         <p className="text-muted-foreground text-center py-8">
           No student found 🔍
         </p>

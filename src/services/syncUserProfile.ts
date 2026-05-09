@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 
-export const syncUserProfile = async (roll_no:string, clerkId: string): Promise<void> => {
+export const syncUserProfile = async ( clerkId: string, roll_no:string): Promise<void> => {
   const supabase = createClient();
 
   const { error } = await supabase

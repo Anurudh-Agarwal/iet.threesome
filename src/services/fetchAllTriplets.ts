@@ -1,6 +1,18 @@
 import { createClient } from "@/lib/supabase/client";
 import { type Triplet, type RamanujanStudent } from "@/types";
 
+const extractStudent = (raw: unknown): RamanujanStudent => {
+  if (Array.isArray(raw)) {
+    const student = raw[0] as RamanujanStudent | undefined;
+    if (!student) throw new Error("Joined student record missing from triplet row");
+    return student;
+  }
+  if (raw && typeof raw === "object") {
+    return raw as RamanujanStudent;
+  }
+  throw new Error("Unexpected shape for joined student record");
+};
+
 export const fetchAllTriplets = async (): Promise<Triplet[]> => {
   const supabase = createClient();
 
@@ -15,8 +27,8 @@ export const fetchAllTriplets = async (): Promise<Triplet[]> => {
   if (error) throw new Error(`Failed to fetch triplets: ${error.message}`);
 
   return data.map((row) => ({
-    student_1: (row.student_1 as unknown as RamanujanStudent[])[0],
-    student_2: (row.student_2 as unknown as RamanujanStudent[])[0],
-    student_3: (row.student_3 as unknown as RamanujanStudent[])[0],
+    student_1: extractStudent(row.student_1),
+    student_2: extractStudent(row.student_2),
+    student_3: extractStudent(row.student_3),
   }));
 };

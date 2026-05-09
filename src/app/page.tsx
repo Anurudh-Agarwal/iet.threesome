@@ -12,17 +12,17 @@ import { useEffect, useState } from "react";
 import { type RamanujanStudent } from "@/types";
 
 export default function Home() {
-  const data = useFilledFormData();
+  const { data, isLoading: formDataLoading } = useFilledFormData();
   const [students, setStudents] = useState<RamanujanStudent[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [studentsLoading, setStudentsLoading] = useState(true);
 
   useEffect(() => {
     fetchAllStudents()
       .then((s) => setStudents(s ?? []))
-      .finally(() => setIsLoading(false));
+      .finally(() => setStudentsLoading(false));
   }, []);
 
-  if (isLoading) {
+  if (studentsLoading || formDataLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Spinner />

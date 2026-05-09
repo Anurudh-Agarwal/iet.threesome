@@ -5,7 +5,7 @@ import getFormDataFromLocalStorage from "@/services/getFormDataFromLocalStorage"
 import { FormData, Error } from "@/types";
 import { useClerk } from "@clerk/nextjs";
 
-export const useChosenPrioritites = () => {
+export const useChosenPriorities = () => {
   const [error, setError] = useState<Error | null>(null);
   const [chosenPrior, setChosenPrior] = useState<FormData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

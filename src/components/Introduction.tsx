@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,14 +10,24 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { hasSeenIntro , markAsSeenIntro} from "@/services/hasSeenIntro";
+import { hasSeenIntro, markAsSeenIntro } from "@/services/hasSeenIntro";
 
 export default function IntroDialog() {
-  if(hasSeenIntro()){
-    return null;
-  }
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!hasSeenIntro()) {
+      setOpen(true);
+    }
+  }, []);
+
+  const handleContinue = () => {
+    markAsSeenIntro();
+    setOpen(false);
+  };
+
   return (
-    <Dialog defaultOpen>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-120">
         <DialogHeader>
           <DialogTitle>Welcome to Threesome</DialogTitle>
@@ -42,7 +55,7 @@ export default function IntroDialog() {
           </p>
         </div>
 
-        <Button className="w-full mt-2" onClick={markAsSeenIntro}>Continue</Button>
+        <Button className="w-full mt-2" onClick={handleContinue}>Continue</Button>
       </DialogContent>
     </Dialog>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -12,13 +14,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFilledFormData } from "@/hooks/useFilledFormData";
 
 export default function ChosenPriorityTable() {
-  const data = useFilledFormData();
+  const { data } = useFilledFormData();
 
   return (
     <Card className="w-full rounded-2xl shadow-sm">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold">
-          Choosen Priority Order
+          Chosen Priority Order
         </CardTitle>
       </CardHeader>
 
