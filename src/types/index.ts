@@ -28,16 +28,15 @@ export interface VotedStudent {
 
 // ── Form ─────────────────────────────────────────
 export interface FormData {
-  voter_roll_no: string;
-  p1: string;
-  p2: string;
-  p3: string;
-  p4: string;
+    p1: RamanujanStudent; 
+    p2: RamanujanStudent;
+    p3: RamanujanStudent;
+    p4: RamanujanStudent;
 }
 
 // ── Triplet ──────────────────────────────────────
 export interface Triplet {
-  student_1: RamanujanStudent;   // reuse existing type, don't repeat yourself
+  student_1: RamanujanStudent;   
   student_2: RamanujanStudent;
   student_3: RamanujanStudent;
 }
