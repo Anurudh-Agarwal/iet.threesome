@@ -174,24 +174,34 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
     syncOnLogin();
   }, [isSignedIn, roll_no]);
 
-  const onSubmit = async (values: PriorityFormValues) => {
-    const formData: PriorityFormData = {
-      p1: students.find((s) => s.roll_no === values.p1)!,
-      p2: students.find((s) => s.roll_no === values.p2)!,
-      p3: students.find((s) => s.roll_no === values.p3)!,
-      p4: students.find((s) => s.roll_no === values.p4)!,
-    };
-
-    const key = roll_no ?? "guest";
-    saveFormDataToLocalStorage(key, formData);
-
-    if (!isSignedIn) {
-      openSignIn();
-      return;
-    }
-
-    await saveFormDataToSupabase(roll_no!, formData); // no token
+ const onSubmit = async (values: PriorityFormValues) => {
+  const formData: PriorityFormData = {
+    p1: students.find((s) => s.roll_no === values.p1)!,
+    p2: students.find((s) => s.roll_no === values.p2)!,
+    p3: students.find((s) => s.roll_no === values.p3)!,
+    p4: students.find((s) => s.roll_no === values.p4)!,
   };
+
+  // Not signed in — save to localStorage and prompt login
+  if (!isSignedIn) {
+    saveFormDataToLocalStorage("guest", formData);
+    openSignIn();
+    return;
+  }
+
+  // Signed in — save to Supabase
+  try {
+    await saveFormDataToSupabase(roll_no!, formData);
+    // Only clear localStorage after successful save
+    localStorage.removeItem(roll_no!);
+    localStorage.removeItem("guest");
+    // Reload page to show ChosenPriorityTable
+    window.location.reload();
+  } catch (err) {
+    console.error("Submit failed:", err);
+    alert("Failed to submit. Please try again.");
+  }
+};
 
   return (
     <div className="border rounded-2xl p-6 md:p-8 shadow-sm bg-card w-full max-w-xl mx-auto">
