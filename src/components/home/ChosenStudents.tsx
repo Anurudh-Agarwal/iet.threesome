@@ -39,6 +39,11 @@ export default function ChosenPriorityTable() {
     const load = async () => {
       try {
         const result = await fetchChosenPriorities(roll_no);
+
+          if (!result) { 
+      setData(null);
+      return;
+    }
         setData({
           p1: Array.isArray(result.p1) ? result.p1[0] : result.p1,
           p2: Array.isArray(result.p2) ? result.p2[0] : result.p2,

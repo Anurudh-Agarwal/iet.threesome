@@ -14,7 +14,7 @@ export const fetchChosenPriorities = async (roll_no: string) => {
     `,
     )
     .eq("voter_roll_no", roll_no)
-    .single();
+    .maybeSingle();
 
   if (error) throw { message: "Failed to fetch chosen priorities" };
   return data;

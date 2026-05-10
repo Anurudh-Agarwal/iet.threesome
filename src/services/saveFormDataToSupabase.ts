@@ -1,12 +1,11 @@
 import { createClient } from "@/lib/supabase/client";
-import { type FormData as PriorityFormData } from "@/types"; // 👈 rename to avoid conflict
+import { type FormData as PriorityFormData } from "@/types";
 
 export const saveFormDataToSupabase = async (
   voter_roll_no: string,
-  formData: PriorityFormData, // 👈 use renamed type
-  supabaseToken: string
+  formData: PriorityFormData,
 ): Promise<void> => {
-  const supabase = createClient(supabaseToken);
+  const supabase = createClient();
 
   const { error } = await supabase.from("priorities").upsert({
     voter_roll_no,

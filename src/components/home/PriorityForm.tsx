@@ -3,7 +3,7 @@
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useUser, useClerk, useAuth } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
 import {
   Form,
   FormControl,
@@ -130,7 +130,6 @@ function StudentCombobox({
 export const PriorityForm = ({ students }: PriorityFormProps) => {
   const { isSignedIn, user } = useUser();
   const { openSignIn } = useClerk();
-  const { getToken } = useAuth();
   const roll_no = user?.primaryEmailAddress?.emailAddress?.split("@")[0];
 
   // Filter out the logged-in user from the student list
@@ -143,7 +142,7 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
 
   const watched = useWatch({ control: form.control });
 
-  // Pre-fill form from localStorage (works for both guest and logged-in user)
+  // Pre-fill form from localStorage
   useEffect(() => {
     const key = roll_no ?? "guest";
     const savedData = getFormDataFromLocalStorage(key);
@@ -161,9 +160,6 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
     if (!isSignedIn || !roll_no) return;
 
     const syncOnLogin = async () => {
-      const token = await getToken({ template: "supabase" });
-      if (!token) return;
-
       const savedData =
         getFormDataFromLocalStorage(roll_no) ??
         getFormDataFromLocalStorage("guest");
@@ -172,7 +168,7 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
 
       saveFormDataToLocalStorage(roll_no, savedData);
       localStorage.removeItem("guest");
-      await saveFormDataToSupabase(roll_no, savedData, token);
+      await saveFormDataToSupabase(roll_no, savedData); // no token
     };
 
     syncOnLogin();
@@ -194,10 +190,7 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
       return;
     }
 
-    const token = await getToken({ template: "supabase" });
-    if (!token) return;
-
-    await saveFormDataToSupabase(roll_no!, formData, token);
+    await saveFormDataToSupabase(roll_no!, formData); // no token
   };
 
   return (
@@ -223,7 +216,7 @@ export const PriorityForm = ({ students }: PriorityFormProps) => {
                       <StudentCombobox
                         value={field.value}
                         onChange={field.onChange}
-                        students={filteredStudents} // 👈 self excluded
+                        students={filteredStudents}
                         placeholder={`Select ${label}`}
                         selectedOthers={selectedOthers}
                       />
